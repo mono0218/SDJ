@@ -9,52 +9,94 @@ export async function Init(token){
             GatewayIntentBits.GuildVoiceStates,] });
 
     client.once('ready', async() => {
-        console.log(`Logged in as ${client.user.tag}!`);
+        await console.log(`Logged in as ${client.user.tag}!`);
     });
 
     await client.login(token);
 
-    return client
+    return client;
 }
 
 export async function GetGuild(client,GuildId){
-    return client.guilds.cache.get(GuildId)
+    try {
+        return client.guilds.fetch(GuildId)
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-export async function Send (client,channelId,content){
-    await client.channels.cache.get(channelId).send(content)
+export async function GetChannel(client,ChannelId){
+    try {
+        return client.channels.fetch(ChannelId)
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-export async function SendEmbed(client,channelId,Embed){
-    await client.channels.cache.get(channelId).send({embeds:[Embed]})
+export async function Send (client,Channel,content){
+    try {
+        await Channel.send(content)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function SendEmbed(client,Channel,Embed){
+    try {
+        Channel.send({embeds:[Embed]});
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export async function Dm(client,userId,content){
-    await client.users.cache.get(userId).send(content)
+    try {
+        const user =await client.users.fetch(userId)
+        user.send(content)
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-export async function Delete(client,userId,message){
-    await message.delete()
+export async function Delete(client,Channel,MessageId){
+    try {
+        Channel.messages.delete(MessageId);
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-export async function GetFile(message){
-    return message.attachments.map(attachment => attachment.url)
+export async function GetFile(Channel,MessageId){
+    try {
+        const message = await Channel.messages.fetch(MessageId)
+        return message.attachments.map(attachment => attachment.url)
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-export async function SendFile(client,channelId,File){
-    await client.channels.cache.get(channelId).send({files: [File]})
+export async function SendFile(client,Channel,File){
+    try {
+        await Channel.send({files: [File]})
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-export async function React(message,ReactId){
+export async function React(Channel,MessageId,ReactId){
+    const message = await Channel.messages.fetch(MessageId)
     await message.react(ReactId)
 }
 
-export async function ReactAllDelete(message){
+export async function ReactAllDelete(Channel,MessageId){
+    const message = await Channel.messages.fetch(MessageId)
     await message.reactions.removeAll()
 }
 
-export async function ReactDelete(message,ReactId){
-    await message.reactions.cache.get(ReactId).remove()
+export async function ReactDelete(Channel,MessageId,ReactId){
+    const message = await Channel.messages.fetch(MessageId)
+    const data = await message.reactions.fetch(ReactId)
+        data.remove()
 }
 
 export async function ChannelCreate(Guild,Option){
@@ -78,8 +120,8 @@ export async function Kick(Guild,UserId,Reason=""){
 }
 
 export async function AddRole(Guild,UserId,RoleId){
-    let member = await Guild.members.cache.get(UserId);
-    member.roles.add(RoleId)
+    let member = await Guild.members.fetch(UserId);
+    await member.roles.add(RoleId)
 }
 
 export async function CreateRole(Guild,RoleName){
@@ -87,12 +129,12 @@ export async function CreateRole(Guild,RoleName){
 }
 
 export async function CheckRole(Guild,UserId,RoleId){
-    let member = await Guild.members.cache.get(UserId);
+    let member = await Guild.members.fetch(UserId);
     member.roles.cache.has(RoleId)
 }
 
 export async function GetUserStatus(Guild,UserId){
-    let member = await Guild.members.cache.get(UserId);
+    let member = await Guild.members.fetch(UserId);
 
     return member.presence.status;
 }
@@ -109,11 +151,15 @@ export async function SetGlobalCommands(client,commands){
     await client.application.commands.set(commands);
 }
 
-export async function ListenEvent(client,EventName,func){
+export async function ListenOnEvent(client,EventName,func){
     client.on(EventName, func);
 }
 
-export async function UnListenEvent(client,EventName,func){
+export async function ListenOffEvent(client,EventName,func){
     client.off(EventName,func)
+}
+
+export async function Reply(interaction,Content){
+    await interaction.reply(Content)
 }
 
