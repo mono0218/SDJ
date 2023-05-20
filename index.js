@@ -21,7 +21,7 @@ export async function GetGuild(client,GuildId){
     try {
         return client.guilds.fetch(GuildId)
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -29,7 +29,7 @@ export async function GetChannel(client,ChannelId){
     try {
         return client.channels.fetch(ChannelId)
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -37,7 +37,7 @@ export async function Send (client,Channel,content){
     try {
         await Channel.send(content)
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -45,7 +45,7 @@ export async function SendEmbed(client,Channel,Embed){
     try {
         Channel.send({embeds:[Embed]});
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -54,7 +54,7 @@ export async function Dm(client,userId,content){
         const user =await client.users.fetch(userId)
         user.send(content)
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -62,7 +62,7 @@ export async function Delete(client,Channel,MessageId){
     try {
         Channel.messages.delete(MessageId);
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -71,7 +71,7 @@ export async function GetFile(Channel,MessageId){
         const message = await Channel.messages.fetch(MessageId)
         return message.attachments.map(attachment => attachment.url)
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -79,87 +79,159 @@ export async function SendFile(client,Channel,File){
     try {
         await Channel.send({files: [File]})
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
+
 }
 
 export async function React(Channel,MessageId,ReactId){
-    const message = await Channel.messages.fetch(MessageId)
-    await message.react(ReactId)
+    try {
+        const message = await Channel.messages.fetch(MessageId)
+        await message.react(ReactId)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function ReactAllDelete(Channel,MessageId){
-    const message = await Channel.messages.fetch(MessageId)
-    await message.reactions.removeAll()
+    try {
+        const message = await Channel.messages.fetch(MessageId)
+        await message.reactions.removeAll()
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function ReactDelete(Channel,MessageId,ReactId){
-    const message = await Channel.messages.fetch(MessageId)
-    const data = await message.reactions.fetch(ReactId)
+    try {
+        const message = await Channel.messages.fetch(MessageId)
+        const data = await message.reactions.fetch(ReactId)
         data.remove()
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function ChannelCreate(Guild,Option){
-    await Guild.channels.create(Option)
+    try {
+        await Guild.channels.create(Option)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function BanList(Guild){
-    const List = await Guild.bans.fetch()
+    try {
+        const List = await Guild.bans.fetch()
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function Ban(Guild,UserId,Reason=""){
-    await Guild.members.ban(UserId,{reason: Reason})
+    try {
+        await Guild.members.ban(UserId,{reason: Reason})
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function UnBan(Guild,UserId,Reason=""){
-    await Guild.members.unban(UserId, Reason)
+    try {
+        await Guild.members.unban(UserId, Reason)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function Kick(Guild,UserId,Reason=""){
-    await Guild.members.kick(UserId,Reason)
+    try {
+        await Guild.members.kick(UserId,Reason)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function AddRole(Guild,UserId,RoleId){
-    let member = await Guild.members.fetch(UserId);
-    await member.roles.add(RoleId)
+    try {
+        let member = await Guild.members.fetch(UserId);
+        await member.roles.add(RoleId)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function CreateRole(Guild,RoleName){
-    await Guild.roles.create({ name: RoleName })
+    try {
+        await Guild.roles.create({ name: RoleName })
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function CheckRole(Guild,UserId,RoleId){
-    let member = await Guild.members.fetch(UserId);
-    member.roles.cache.has(RoleId)
+    try {
+        let member = await Guild.members.fetch(UserId);
+        member.roles.cache.has(RoleId)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function GetUserStatus(Guild,UserId){
-    let member = await Guild.members.fetch(UserId);
+    try {
+        let member = await Guild.members.fetch(UserId);
 
-    return member.presence.status;
+        return member.presence.status;
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function SetStatusMessage(client,Content,type="WATCHING"){
-    client.user.setActivity(Content, { type: type })
+    try {
+        client.user.setActivity(Content, { type: type })
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function SetLocalCommands(client,commands,GuildId){
-    await client.application.commands.set(commands,GuildId);
+    try {
+        await client.application.commands.set(commands,GuildId);
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function SetGlobalCommands(client,commands){
-    await client.application.commands.set(commands);
+    try {
+        await client.application.commands.set(commands);
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function ListenOnEvent(client,EventName,func){
-    client.on(EventName, func);
+    try {
+        client.on(EventName, func);
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function ListenOffEvent(client,EventName,func){
-    client.off(EventName,func)
+    try {
+        client.off(EventName,func)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export async function Reply(interaction,Content){
-    await interaction.reply(Content)
+    try {
+        await interaction.reply(Content)
+    } catch (error) {
+        console.error(error)
+    }
 }
-
