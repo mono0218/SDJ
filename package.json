@@ -3,13 +3,11 @@
   "version": "1.0.0",
   "description": "discordjsを簡単には書くことができるラッパーです",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "type": "module",
-  "author": "",
-  "license": "ISC",
+  "author": "mono0218 <mono@monokamo.com>",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^14.11.0"
-  }
+  },
+  "homepage": "https://sdj.monodev.cloud"
 }
