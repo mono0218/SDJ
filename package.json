@@ -1,5 +1,5 @@
 {
-  "name": "simple-discord",
+  "name": "sdj",
   "version": "1.0.0",
   "description": "discordjsを簡単には書くことができるラッパーです",
   "main": "index.js",
